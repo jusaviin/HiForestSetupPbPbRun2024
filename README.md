@@ -14,7 +14,7 @@ voms-proxy-init --voms cms
 
 For production, it is a good idea to create a production branch and commit all the changes every time before running production, so that the exact configuration used for the production can be traced back if needed. 
 ```bash
-git checkout -b rapidValidationForest2023
+git checkout -b rapidValidationForest2024
 ```
 
 ## Test the configuration
@@ -78,3 +78,5 @@ eos file rename /eos/cms/store/group/phys_heavyions/jviinika/run3RapidValidation
 There are a couple of helpful bash scripts included in this directory that can make life easier in certain occasions. If you want to create a forest using prompt reconstruction files for certain run, you can easily create a file list with ```findFilesForRun.sh``` by defining primary dataset and run number. Running it without arguments print usage help.
 
 Another script is for merging all .root files in a specific folder, that can be either local or at CERN EOS. This is called ```addHistograms.sh```. Again, running the script without arguments gives you usage instructions for this script.
+
+If you are running several CRAB jobs at the same time, you can use the ```checkCrabJobs.sh``` script to easily check the statuses for all of them. It takes a text file with all job names as an input, and outputs only the status information about all the jobs. For more details, run the script without arguments.
