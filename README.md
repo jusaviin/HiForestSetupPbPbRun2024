@@ -37,7 +37,7 @@ cmsRun forest_miniAOD_run3_DATA.py
 
 ## Submit the jobs with crab
 
-To submit the jobs via CRAB, copy the template file from this area to the CMSSW area where you are running the jobs. You will first need to modify the template file according to your needs
+To submit the jobs via CRAB, copy the template file without emap from this area to the CMSSW area where you are running the jobs. The file with emap is included as an example if similar trick with ZDC needs to be done again as was done in 2023. You will first need to modify the template file according to your needs
 ```
 vim crabForestTemplate.py
 ### Modify the following lines:
