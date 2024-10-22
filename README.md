@@ -1,23 +1,15 @@
-# HiForestSetupPbPbRun2023
-Instructions on how to setup on run the rapid validation forests for 2023 PbPb run.
+# HiForestSetupPbPbRun2024
+Instructions on how to setup and run the rapid validation forests for 2024 PbPb and pp reference runs.
 
 ## Setup environment:
 ```bash
-cmsrel CMSSW_13_2_4
-cd CMSSW_13_2_4/src
+cmsrel CMSSW_14_1_3
+cd CMSSW_14_1_3/src
 cmsenv
-git cms-merge-topic CmsHI:forest_CMSSW_13_2_X
+git cms-merge-topic CmsHI:forest_CMSSW_14_1_X
 git remote add cmshi git@github.com:CmsHI/cmssw.git
 scram build -j8
 voms-proxy-init --voms cms
-```
-
-The following recipe will add B/D-finder to the configuration:
-```bash
-cd $CMSSW_BASE/src
-git clone -b 13XX_miniAOD https://github.com/milanchestojanovic/Bfinder.git --depth 1
-source Bfinder/test/DnBfinder_to_Forest_132X_miniAOD.sh
-scram build -j8
 ```
 
 For production, it is a good idea to create a production branch and commit all the changes every time before running production, so that the exact configuration used for the production can be traced back if needed. 
@@ -36,13 +28,11 @@ sed -i -e "s#/eos/cms#root://eoscms.cern.ch/#" fileListHIPhysicsRawPrime0_run374
 
 Then update this input file to the the configuration file
 ```bash
-vim forest_miniAOD_run3_DATA.py  # Without D-finder
-vim forest_miniAOD_run3_DATA_wDfinder.py  # With D-finder
+vim forest_miniAOD_run3_DATA.py
 ```
 Now you can run the configuration interactively to ensure that it works for your file:
 ```bash
-cmsRun forest_miniAOD_run3_DATA.py  # Without D-finder
-cmsRun forest_miniAOD_run3_DATA_wDfinder.py  # With D-finder
+cmsRun forest_miniAOD_run3_DATA.py
 ```
 
 ## Submit the jobs with crab
@@ -65,7 +55,7 @@ Once you have customized the CRAB template file, for documentation purposes, com
 ```bash
 git add -u
 git commit -m "Descriptive comment"
-git push my-cmssw rapidValidationForest2023:rapidValidationForest2023
+git push my-cmssw rapidValidationForest2024:rapidValidationForest2024
 ```
 Then remember the commit hash
 ```bash
@@ -77,27 +67,12 @@ After the bookkeeping is done, submit the jobs.
 crab submit -c crabForestTemplate.py
 ```
 
-When the jobs are finished, you should document in the Twiki page https://twiki.cern.ch/twiki/bin/view/CMS/HiForest2023 that the forest is done, and for each forest add the git link for the configuration that was used to create the said forest. Example link for a commit looks like this: https://github.com/jusaviin/cmssw/tree/250185e12b917d36fd8d3a51208e5f8311f3ad92.
+When the jobs are finished, you should document in the Twiki page https://twiki.cern.ch/twiki/bin/view/CMS/HiForest2024 that the forest is done, and for each forest add the git link for the configuration that was used to create the said forest. Example link for a commit looks like this: https://github.com/jusaviin/cmssw/tree/250185e12b917d36fd8d3a51208e5f8311f3ad92.
 
 CRAB likes to create a long structure of unnecessary folders for the output files. It is a good idea to trunkate this structure, since CRAB also has a lenght limit for input files, and a long file structure might cause errors in subsequent job submission. The following command will do the trick:
 ```bash
 eos file rename /eos/cms/store/group/phys_heavyions/jviinika/run3RapidValidation/PbPb2023_run374322_HIExpressRawPrime_withDFinder_2023-09-27/CRAB_UserFiles/crab_PbPb2023_run374322_HIExpressRawPrime_withDFinder_2023-09-27/230928_014852/0000 /eos/cms/store/group/phys_heavyions/jviinika/run3RapidValidation/PbPb2023_run374322_HIExpressRawPrime_withDFinder_2023-09-27/0000
 ```
-
-## Submit jobs with ZDC emap file
-
-Currently (2023-09-29) the ZDC energy calibration needs to be manually. For this, an energy map configuration file needs to be included in the CRAB jobs. To be able to do this, you will need to copy the files
-```
-crabForestTemplateWithEmap.py
-submitScript.sh
-```
-to your production area. The difference to the default CRAB configuration is that instead of running the regular python configuration, CRAB will now be configured to run ```submitScript.sh``` instead. Also the emap file will be shipped together with the regular forest files to the CRAB server. The script moves the emap file to location where it can be found by cmsRun, and then executes cmsRun. Using this setup will properly calibrate ZDC digis.
-
-Notice that for local running, you will need to make a copy of the emap file in a location where FileInPath searches for it. This can be achieved in the test folder doing
-```bash
-cp emap_2023_newZDC_v3.txt ../../../
-```
-
 ## Helpful scripts
 
 There are a couple of helpful bash scripts included in this directory that can make life easier in certain occasions. If you want to create a forest using prompt reconstruction files for certain run, you can easily create a file list with ```findFilesForRun.sh``` by defining primary dataset and run number. Running it without arguments print usage help.
