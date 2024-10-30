@@ -38,8 +38,8 @@ git config -l
 # Do a fetch to get the list of branches
 git fetch my-cmssw
 
-# Push to establish the link for the 'rapidValidationForest2024' branch
-git push my-cmssw rapidValidationForest2024:rapidValidationForest2024
+# Set upstream to your private 'rapidValidationForest2024' branch
+git branch -u my-cmssw/rapidValidationForest2024
 ```
 
 ## Test the configuration
