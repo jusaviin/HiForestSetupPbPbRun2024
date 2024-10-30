@@ -2,9 +2,10 @@
 Instructions on how to setup and run the rapid validation forests for 2024 PbPb and pp reference runs.
 
 ## Setup environment:
+Setup on LXPlus8 for CMSSW_14_1_X.
 ```bash
-cmsrel CMSSW_14_1_3
-cd CMSSW_14_1_3/src
+cmsrel CMSSW_14_1_4_patch2
+cd CMSSW_14_1_4_patch2/src
 cmsenv
 git cms-merge-topic CmsHI:forest_CMSSW_14_1_X
 git remote add cmshi git@github.com:CmsHI/cmssw.git
@@ -15,6 +16,30 @@ voms-proxy-init --voms cms
 For production, it is a good idea to create a production branch and commit all the changes every time before running production, so that the exact configuration used for the production can be traced back if needed. 
 ```bash
 git checkout -b rapidValidationForest2024
+```
+
+## Link your private repository 
+
+You will also need to fork the [https://github.com/CmsHI/cmssw/tree/forest_CMSSW_14_1_X](CmsHI/cmssw) git repository, which can be done on the GitHub website using the "Fork" dropdown. Keep the name the same.
+
+From the "Branches" tab, add a new branch based on "forest_CMSSW_14_1_X" and name it "rapidValidationForest2024".
+
+Finally, create the link to your private repo.
+```bash
+cd CMSSW_14_1_4_patch2/src/HeavyIonsAnalysis/Configuration/test/
+
+# Create a remote alias for your repo
+git remote add my-cmssw git@github.com:<your_github_username>/cmssw.git
+
+# Check that it has been added:
+git config -l
+# You should also see remote repos for 'official-cmssw' and 'cmshi'
+
+# Do a fetch to get the list of branches
+git fetch my-cmssw
+
+# Set upstream to your private 'rapidValidationForest2024' branch
+git branch -u my-cmssw/rapidValidationForest2024
 ```
 
 ## Test the configuration
@@ -40,13 +65,18 @@ cmsRun forest_miniAOD_run3_DATA.py
 To submit the jobs via CRAB, copy the template file without emap from this area to the CMSSW area where you are running the jobs. The file with emap is included as an example if similar trick with ZDC needs to be done again as was done in 2023. You will first need to modify the template file according to your needs
 ```
 vim crabForestTemplate.py
-### Modify the following lines:
+```
+Modify the following lines:
+```python
+# At the top:
 inputList
 jobTag
-### Check that memory and run time settings are good:
+
+# Check that memory and run time settings are good:
 config.JobType.maxMemoryMB
 config.JobType.maxJobRuntimeMin
-### Write the output somewhere where you have write rights:
+
+# Write the output somewhere where you have write rights:
 config.Site.storageSite
 ```
 Notice that you will need a file list of all the files in the dataset in .txt format for the inputList variable. The jobTag can be whichever name that describes the job you are sending.
@@ -73,6 +103,7 @@ CRAB likes to create a long structure of unnecessary folders for the output file
 ```bash
 eos file rename /eos/cms/store/group/phys_heavyions/jviinika/run3RapidValidation/PbPb2023_run374322_HIExpressRawPrime_withDFinder_2023-09-27/CRAB_UserFiles/crab_PbPb2023_run374322_HIExpressRawPrime_withDFinder_2023-09-27/230928_014852/0000 /eos/cms/store/group/phys_heavyions/jviinika/run3RapidValidation/PbPb2023_run374322_HIExpressRawPrime_withDFinder_2023-09-27/0000
 ```
+
 ## Helpful scripts
 
 There are a couple of helpful bash scripts included in this directory that can make life easier in certain occasions. If you want to create a forest using prompt reconstruction files for certain run, you can easily create a file list with ```findFilesForRun.sh``` by defining primary dataset and run number. Running it without arguments print usage help.
