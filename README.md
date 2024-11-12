@@ -20,7 +20,7 @@ git checkout -b rapidValidationForest2024
 
 ## Link your private repository 
 
-You will also need to fork the [https://github.com/CmsHI/cmssw/tree/forest_CMSSW_14_1_X](CmsHI/cmssw) git repository, which can be done on the GitHub website using the "Fork" dropdown. Keep the name the same.
+You will also need to fork the [CmsHI/cmssw](https://github.com/CmsHI/cmssw/tree/forest_CMSSW_14_1_X) git repository, branch `forest_CMSSW_14_1_X`, which can be done on the GitHub website using the "Fork" dropdown. Keep the name the same.
 
 From the "Branches" tab, add a new branch based on "forest_CMSSW_14_1_X" and name it "rapidValidationForest2024".
 
